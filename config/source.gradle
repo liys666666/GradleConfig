@@ -1,0 +1,8 @@
+
+ext{
+    //res资源文件
+    resSource = [
+            'src/main/res',
+            'src/main/res-main/home',
+    ]
+}

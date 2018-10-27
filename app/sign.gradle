@@ -1,0 +1,8 @@
+
+ext {
+    //签名信息
+    STORE_FILE = "test.jks"
+    STORE_PASSWORD = "123456"
+    KEY_ALIAS = "123456"
+    KEY_PASSWORD = "123456"
+}

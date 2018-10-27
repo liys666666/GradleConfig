@@ -1,0 +1,69 @@
+apply plugin: 'com.android.application'
+apply from: 'sign.gradle'
+
+android {
+    //SDK和App版本
+    compileSdkVersion COMPILE_SDK_VERSION
+    defaultConfig {
+        applicationId APPLICATION_ID
+        minSdkVersion MIN_SDK_VERSION
+        targetSdkVersion TARGET_SDK_VERSION
+        versionCode VERSION_CODE
+        versionName VERSION_NAME
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+
+    //签名
+    signingConfigs{
+        release {
+            storeFile file(STORE_FILE)
+            storePassword STORE_PASSWORD
+            keyAlias KEY_ALIAS
+            keyPassword KEY_PASSWORD
+        }
+        debug {
+            release
+        }
+    }
+
+    //混淆和日志
+    buildTypes {
+        release {
+            minifyEnabled MINIFY_ENABLED
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField LOG_DEBUG_TYPE, LOG_DEBUG_NANE, LOG_DEBUG_RELEASE //是否输出LOG信息
+            buildConfigField BASE_URL_TYPE, BASE_URL_NAME, BASE_URL_RELEASE // baseUrl
+            signingConfigs.release
+        }
+        debug{
+            buildConfigField LOG_DEBUG_TYPE, LOG_DEBUG_NANE, LOG_DEBUG_DEBUG //是否输出LOG信息
+            buildConfigField BASE_URL_TYPE, BASE_URL_NAME, BASE_URL_DEBUG //baseUrl
+        }
+    }
+
+    //资源分包
+    sourceSets{
+        main {
+            res.srcDirs = [ resSource.each{it} ]
+        }
+    }
+}
+
+dependencies {
+    //系统的
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation roots.appcompatV7
+    implementation roots.constraint
+    testImplementation roots.junit
+    androidTestImplementation roots.runner
+    androidTestImplementation roots.espresso
+
+    //导入第三方框架
+    app.each {
+        implementation it
+    }
+
+    //依赖库
+    implementation project(':testlibrary')
+}
